@@ -6,6 +6,10 @@ cluster. Datasources can be anything that expose a network interface
 
 ## To do
 
+* write auto discovery
+* gather logos
+* init UI (tabs, datasource pane)
+* add/config DS
 
 
 ## Background
@@ -15,14 +19,14 @@ cluster. Datasources can be anything that expose a network interface
 | Datasource               | Port   |
 | ------------------------ | ------:|
 | HDFS Namenode HTTP       | 50070  |
-| HDFS Datanodes HTT       | 50075  |
-| HBase Master Binary      | 60000  |
+| HDFS Datanodes HTTP      | 50075  |
+| *HBase Master Binary*    | 60000  |
 | HBase HTTP               | 60010  |
 | HBase Regionservers HTTP | 60030  |
 | HBase REST Service       |  8080  |
 | Hive Server              | 10000  |
-| Hive Metastore Thrift    |  9083  |
-| MySQL/JDBC               |  3306  |
+| *Hive Metastore Thrift*  |  9083  |
+| *MySQL/JDBC*             |  3306  |
 | MongoDB/mongod           | 28017  |
 | CouchDB/Futon            |  5984  |
 | Riak HTTP                |  8091  |
