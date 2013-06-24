@@ -6,7 +6,7 @@ cluster. Datasources can be anything that expose a network interface
 
 ## To do
 
-* write auto discovery
+* write auto discovery-DONE
 * gather logos
 * init UI (tabs, datasource pane)
 * add/config DS

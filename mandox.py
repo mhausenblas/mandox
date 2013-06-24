@@ -25,7 +25,7 @@ import re
 from BaseHTTPServer import BaseHTTPRequestHandler
 from os import curdir, sep
 
-DEBUG = True
+DEBUG = False
 
 # The default ports to be scanned for active services.
 #
@@ -170,6 +170,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type', 'application/json')
 			self.end_headers()
+			logging.info('Success: %s ' %(results))
 			self.wfile.write(json.dumps(results))
 		except:
 			self.send_error(500, 'Server error while scanning hosts %s' %host_range)
