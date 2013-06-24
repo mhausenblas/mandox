@@ -77,7 +77,14 @@ class MandoxServer(BaseHTTPRequestHandler):
 			logging.debug('API call: current list of discovered datasources')
 		elif apicall == '/ds/scan':
 			logging.debug('API call: scanning datasources')
-			self.scan_services('127.0.0.1', 50068, 50080)
+			try:
+				open_ports =  self.scan_services('127.0.0.1', 50068, 50080)
+				self.send_response(200)
+				self.send_header('Content-type', 'application/json')
+				self.end_headers()
+				self.wfile.write(json.dumps(open_ports))
+			except:
+				self.send_error(500, 'Server error while scanning datasources.')
 		else:
 			self.send_error(404,'File Not Found: %s' % apicall)
 		return
@@ -110,6 +117,8 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# the host address can be a valid DNS name (like example.org) 
 	# or an IP address (such as 127.0.0.1)
 	def scan_services(self, target_host, start_port, end_port):
+		# the result is a list of open ports of supplied target host 
+		open_ports = []
 		
 		# make sure we're dealing with an IP address,
 		# so if a host name has been provided turn it
@@ -123,18 +132,21 @@ class MandoxServer(BaseHTTPRequestHandler):
 		subprocess.call('clear', shell=True)
 		logging.debug('Scanning %s ...' %target_host)
 		
+		# scan the ports of the given target IP and report on open ports
 		try:
 			for port in range(start_port, end_port):  
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				result = sock.connect_ex((target_IP, port))
 				if result == 0:
-					logging.debug(' port {}: \t open'.format(port))
+					logging.debug(' found open port %d on host %s' %(port, target_IP))
+					open_ports.append(port)
 				sock.close()
 		except socket.gaierror:
 			logging.info('Can\'t resolve %s' %target_host)
 		except socket.error:
 			logging.info('Can\'t connect to %s' %target_host)
-
+		
+		return open_ports
 
 def usage():
 	print("Usage: python mandox.py")
