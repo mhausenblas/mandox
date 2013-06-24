@@ -19,10 +19,27 @@ $(document).ready(function(){
 
 // scan datasources
 function scanDS() {
+	var apiURL = BASE_MANDOX;
+	var scanOpt = $("input:radio[name=targethosts]:checked").val();
+	var startIP = $("#start-ip").val();
+	var endIP = $("#end-ip").val();
+	var hostlist = $("#hostlist").val();
+	
+	if(scanOpt == "localhost") {
+		apiURL += API_DS_SCAN;
+	}
+	if(scanOpt == "iprange") {
+		apiURL += API_DS_SCAN + startIP + "-" + endIP;
+	}
+	if(scanOpt == "hostlist") {
+		apiURL += API_DS_SCAN + hostlist;
+	}
+
+	console.log("GET " + apiURL);
 	
 	$.ajax({
 		type: "GET",
-		url: BASE_MANDOX + API_DS_SCAN,
+		url: apiURL,
 		dataType : "json",
 		success: function(d){
 			if(d) {

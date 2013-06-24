@@ -8,6 +8,10 @@
 </head>
 <body>
 	<div id="top">
+		<div id="top-control">
+			<a href="">Home</a> |
+			<a href="https://github.com/mhausenblas/mandox/wiki" target="_blank">Documentation</a>
+		</div>
 		<img src="img/mandox.png">
 		<p>
 			The polyglot persistence screening tool.
@@ -19,13 +23,13 @@
 			</div>
 			<div class="scan-option">
 				<input type="radio" name="targethosts" id="iprange" value="iprange" />
-				<label for="iprange" title="Enter a valid IP address range">IP range</label>: 
+				<label for="iprange" title="Enter a valid IP address range">IP range:</label>
 				from <input type="text" id="start-ip" value="127.0.0.1" size="17" title="Enter a valid IP address" />
 				to <input type="text" id="end-ip" value="127.0.0.1" size="17" title="Enter a valid IP address"  />
 			</div>
 			<div class="scan-option">
 				<input type="radio" name="targethosts" id="hosts" value="hostlist" />
-				<label for="iprange" title="Enter host names separated by comma">host list</label> 
+				<label for="iprange" title="Enter host names separated by comma">host list:</label>
 				<input type="text" id="hostlist" size="70" title="Enter host names separated by comma" />
 			</div>
 		</div>
