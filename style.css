@@ -87,6 +87,16 @@ table td {
 	display: none;
 }
 
+
+#scan-config {
+	font-size: 80%;
+}
+
+.scan-option{
+	margin: .5em;
+}
+
+
 .main-entry {
 	width: 100%;
 }

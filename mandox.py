@@ -160,19 +160,21 @@ class MandoxServer(BaseHTTPRequestHandler):
 		try: # scan the target hosts and create a dict from host/IP to open ports
 			results = {}
 			for target_host in host_list:
-				open_ports = []
-				for service in sorted(service_to_port_range): # scan all port ranges
-					logging.debug('   now checking for service %s in port range %s' %(service, service_to_port_range[service]))
-					start_port = int(service_to_port_range[service].split('-')[0])
-					end_port = int(service_to_port_range[service].split('-')[1])
-					open_ports.extend(self.scan_services(target_host, start_port, end_port))
-				results[target_host] = open_ports
+				if target_host:
+					open_ports = []
+					for service in sorted(service_to_port_range): # scan all port ranges
+						logging.debug('   now checking for service %s in port range %s' %(service, service_to_port_range[service]))
+						start_port = int(service_to_port_range[service].split('-')[0])
+						end_port = int(service_to_port_range[service].split('-')[1])
+						open_ports.extend(self.scan_services(target_host, start_port, end_port))
+					results[target_host] = open_ports
 			self.send_response(200)
 			self.send_header('Content-type', 'application/json')
 			self.end_headers()
 			logging.info('Success: %s ' %(results))
 			self.wfile.write(json.dumps(results))
 		except:
+			logging.info('Server error while scanning hosts %s' %host_range)
 			self.send_error(500, 'Server error while scanning hosts %s' %host_range)
 		
 	
