@@ -8,8 +8,8 @@ cluster. Datasources can be anything that expose a network interface
 
 * write auto discovery-DONE
 * gather logos-DONE
-* init UI (tabs, datasource pane)
-* add/config DS
+* init UI (tabs, datasource pane)-DONE
+* add icons (datasource, inspect, definition/doc)
 
 
 ## Background
