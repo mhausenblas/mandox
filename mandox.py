@@ -18,6 +18,10 @@ import cgi
 import time
 import datetime
 import json
+import socket
+import subprocess
+import re
+
 from BaseHTTPServer import BaseHTTPRequestHandler
 from os import curdir, sep
 
@@ -73,6 +77,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 			logging.debug('API call: current list of discovered datasources')
 		elif apicall == '/ds/scan':
 			logging.debug('API call: scanning datasources')
+			self.scan_services('127.0.0.1', 50068, 50080)
 		else:
 			self.send_error(404,'File Not Found: %s' % apicall)
 		return
@@ -101,6 +106,35 @@ class MandoxServer(BaseHTTPRequestHandler):
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
 	
+	# scans services via testing open ports.
+	# the host address can be a valid DNS name (like example.org) 
+	# or an IP address (such as 127.0.0.1)
+	def scan_services(self, target_host, start_port, end_port):
+		
+		# make sure we're dealing with an IP address,
+		# so if a host name has been provided turn it
+		# into a valid IP address.
+		is_IP_address = re.match("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", target_host)
+		if is_IP_address:
+			target_IP  = target_host
+		else:
+			target_IP  = socket.gethostbyname(target_host)
+		
+		subprocess.call('clear', shell=True)
+		logging.debug('Scanning %s ...' %target_host)
+		
+		try:
+			for port in range(start_port, end_port):  
+				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				result = sock.connect_ex((target_IP, port))
+				if result == 0:
+					logging.debug(' port {}: \t open'.format(port))
+				sock.close()
+		except socket.gaierror:
+			logging.info('Can\'t resolve %s' %target_host)
+		except socket.error:
+			logging.info('Can\'t connect to %s' %target_host)
+
 
 def usage():
 	print("Usage: python mandox.py")
