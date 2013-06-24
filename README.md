@@ -9,7 +9,7 @@ cluster. Datasources can be anything that expose a network interface
 * write auto discovery-DONE
 * gather logos-DONE
 * init UI (tabs, datasource pane)-DONE
-* implement host/IP range clientside
+* implement host/IP range clientside-DONE
 * add icons (datasource, inspect, definition/doc)
 * add more DS mappings to front-end
 

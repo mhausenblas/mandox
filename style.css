@@ -1,6 +1,6 @@
 body {
 	font-family: 'Helvetica', sans-serif;
-	font-size: 16pt;
+	font-size: 14pt;
 	margin: 0em auto;
 	background: #fafafa;
 	padding: 0;
@@ -108,9 +108,10 @@ table td {
 
 #scan-config {
 	font-size: 80%;
+	border-top: 1px solid #f0f0f0;
 }
 
-.scan-option{
+.scan-option {
 	margin: .7em;
 }
 
