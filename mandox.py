@@ -46,7 +46,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 		target_url = parsed_path.path[1:]
 		
 		# API calls
-		if self.path.startswith('/ds'):
+		if self.path.startswith('/ds/'):
 			self.serve_api(self.path)
 		# static stuff (for standalone mode - typically served by Apache or nginx)
 		elif self.path == '/':
@@ -73,22 +73,26 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# serves an API call
 	def serve_api(self, apicall):
 		logging.debug('API call: %s ' %(apicall))
-		if apicall == '/ds':
-			logging.debug('API call: current list of discovered datasources')
-		elif apicall == '/ds/scan':
-			logging.debug('API call: scanning datasources')
-			try:
-				open_ports =  self.scan_services('127.0.0.1', 50068, 50080)
-				self.send_response(200)
-				self.send_header('Content-type', 'application/json')
-				self.end_headers()
-				self.wfile.write(json.dumps(open_ports))
-			except:
-				self.send_error(500, 'Server error while scanning datasources.')
+		if apicall == '/ds/':
+			logging.debug(' - current list of discovered datasources')
+		elif apicall.startswith('/ds/scan/'):
+			logging.debug(' - scanning datasources')
+			
+			# either a from/to range as in 192.122.143.48-192.122.143.55 
+			# or a comma-separated list as in n1.example.org,n2.example.org 
+			host_range = apicall.split('/')[-1]
+
+			if not host_range: # default to scanning the localhost
+				logging.debug('  scanning localhost')
+				self.scan_hosts('127.0.0.1-127.0.0.1')
+			elif ('-' in host_range) or (',' in host_range):
+				logging.debug('  host range: %s' %(host_range))
+				self.scan_hosts(host_range)
+			else: 
+				self.send_error(404,'File Not Found: %s' % apicall)
 		else:
 			self.send_error(404,'File Not Found: %s' % apicall)
 		return
-		
 	
 	# changes the default behavour of logging everything - only in DEBUG mode
 	def log_message(self, format, *args):
@@ -113,7 +117,29 @@ class MandoxServer(BaseHTTPRequestHandler):
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
 	
-	# scans services via testing open ports.
+	# scans a range of hosts for active services
+	def scan_hosts(self, host_range):
+		if '-' in host_range: # from/to range as in 192.122.143.48-192.122.143.55 
+			start_host = host_range.split('-')[0]
+			end_host = host_range.split('-')[1]
+			# logging.debug('  scanning hosts from %s to %s' %(start_host, end_host))
+		else: # a comma-separated list as in n1.example.org,n2.example.org 
+			host_list = [h for h in host_range.split(',')]
+			for target_host in host_list:
+				# logging.debug('  scanning host %s' %(target_host))
+				pass
+		
+		# for target_host in host_list:
+		# 	try:
+		# 		open_ports =  self.scan_services(target_host, 50068, 50080)
+		# 		self.send_response(200)
+		# 		self.send_header('Content-type', 'application/json')
+		# 		self.end_headers()
+		# 		self.wfile.write(json.dumps(open_ports))
+		# 	except:
+		# 		self.send_error(500, 'Server error while scanning hosts.')
+	
+	# scans services via testing open ports on a given host.
 	# the host address can be a valid DNS name (like example.org) 
 	# or an IP address (such as 127.0.0.1)
 	def scan_services(self, target_host, start_port, end_port):
@@ -130,7 +156,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 			target_IP  = socket.gethostbyname(target_host)
 		
 		subprocess.call('clear', shell=True)
-		logging.debug('Scanning %s ...' %target_host)
+		logging.debug('   scanning %s ...' %target_host)
 		
 		# scan the ports of the given target IP and report on open ports
 		try:
@@ -138,16 +164,16 @@ class MandoxServer(BaseHTTPRequestHandler):
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				result = sock.connect_ex((target_IP, port))
 				if result == 0:
-					logging.debug(' found open port %d on host %s' %(port, target_IP))
+					logging.debug('    found open port %d on host %s' %(port, target_IP))
 					open_ports.append(port)
 				sock.close()
 		except socket.gaierror:
-			logging.info('Can\'t resolve %s' %target_host)
+			logging.info('    can\'t resolve %s' %target_host)
 		except socket.error:
-			logging.info('Can\'t connect to %s' %target_host)
+			logging.info('    can\'t connect to %s' %target_host)
 		
 		return open_ports
-
+	
 def usage():
 	print("Usage: python mandox.py")
 
@@ -169,3 +195,4 @@ if __name__ == '__main__':
 		print str(err)
 		usage()
 		sys.exit(2)	
+	
