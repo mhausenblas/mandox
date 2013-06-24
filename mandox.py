@@ -8,9 +8,9 @@
 @status: init
 """
 import sys
+import os
 import logging
 import getopt
-import StringIO
 import urlparse
 import urllib
 import string
@@ -25,8 +25,32 @@ import re
 from BaseHTTPServer import BaseHTTPRequestHandler
 from os import curdir, sep
 
-# configuration
 DEBUG = True
+
+# the default ports to be scanned for active services.
+# if no '.mandox_config' file exists in the current directory, then
+# these values are used instead.
+#
+# NOTE: the format of the config file '.mandox_config' is a new-line
+#       separated list of entries, each of the following form:
+#
+#       SERVICE:START_PORT-END_PORT
+#
+#       Remember that the START_PORT is included and the END_PORT is excluded.
+#       so, for example, to scan service ABC on port 8080 you would supply the
+#       following in the config file:
+#
+#      ABC:8080-8081
+service_to_port_range = { 
+	'HDFS'   : '50070-50076',
+	'HBase1' : '60010-60031',
+	'HBase2' : '8080-8081',
+	'Hive1'  : '10000-10001',
+	'Hive2'  : '9083-9084',
+	'MongoDB': '28017-28018',
+	'CouchDB': '5984-5985',
+	'Riak'   : '8091-8092'
+}
 
 if DEBUG:
 	FORMAT = '%(asctime)-0s %(levelname)s %(message)s [at line %(lineno)d]'
@@ -72,11 +96,11 @@ class MandoxServer(BaseHTTPRequestHandler):
 	
 	# serves an API call
 	def serve_api(self, apicall):
-		logging.debug('API call: %s ' %(apicall))
+		logging.info('API call: %s ' %(apicall))
 		if apicall == '/ds/':
-			logging.debug(' - current list of discovered datasources')
+			logging.debug(' current list of discovered datasources')
 		elif apicall.startswith('/ds/scan/'):
-			logging.debug(' - scanning datasources')
+			logging.debug(' scanning datasources')
 			
 			# either a from/to range as in 192.122.143.48-192.122.143.55 
 			# or a comma-separated list as in n1.example.org,n2.example.org 
@@ -117,27 +141,53 @@ class MandoxServer(BaseHTTPRequestHandler):
 		except IOError:
 			self.send_error(404,'File Not Found: %s' % self.path)
 	
-	# scans a range of hosts for active services
+	# scans a range of hosts for active ports. 
+	# output: map of host/IPs to open ports as in {"127.0.0.1": [50070, 50075]}
+	# NOTE: the from/to range is for IPs only (currently not checking if IPs are supplied)
+	# whilst the comma-separated list works for both hostnames or IP addresses.
 	def scan_hosts(self, host_range):
-		if '-' in host_range: # from/to range as in 192.122.143.48-192.122.143.55 
-			start_host = host_range.split('-')[0]
-			end_host = host_range.split('-')[1]
-			# logging.debug('  scanning hosts from %s to %s' %(start_host, end_host))
+		if '-' in host_range: # from/to IP range as in 192.122.143.48-192.122.143.55 
+			start_IP = host_range.split('-')[0]
+			end_IP = host_range.split('-')[1]
+			# NOTE: I should really check if a valid IP range has been supplied!
+			host_list = self.gen_IP_range(start_IP, end_IP)
 		else: # a comma-separated list as in n1.example.org,n2.example.org 
 			host_list = [h for h in host_range.split(',')]
-			for target_host in host_list:
-				# logging.debug('  scanning host %s' %(target_host))
-				pass
 		
-		# for target_host in host_list:
-		# 	try:
-		# 		open_ports =  self.scan_services(target_host, 50068, 50080)
-		# 		self.send_response(200)
-		# 		self.send_header('Content-type', 'application/json')
-		# 		self.end_headers()
-		# 		self.wfile.write(json.dumps(open_ports))
-		# 	except:
-		# 		self.send_error(500, 'Server error while scanning hosts.')
+		try: # scan the target hosts and create a dict from host/IP to open ports
+			results = {}
+			for target_host in host_list:
+				open_ports = []
+				for service in sorted(service_to_IP_range): # scan all port ranges
+					logging.debug('   now checking for service %s in port range %s' %(service, service_to_IP_range[service]))
+					start_port = int(service_to_IP_range[service].split('-')[0])
+					end_port = int(service_to_IP_range[service].split('-')[1])
+					open_ports.extend(self.scan_services(target_host, start_port, end_port))
+				results[target_host] = open_ports
+			self.send_response(200)
+			self.send_header('Content-type', 'application/json')
+			self.end_headers()
+			self.wfile.write(json.dumps(results))
+		except:
+			self.send_error(500, 'Server error while scanning hosts %s' %host_range)
+		
+	
+	# generates a list of IP addresses based on an IP range
+	# lifted from http://cmikavac.net/2011/09/11/how-to-generate-an-ip-range-list-in-python/
+	def gen_IP_range(self, start_IP, end_IP):
+		start = list(map(int, start_IP.split(".")))
+		end = list(map(int, end_IP.split(".")))
+		temp = start
+		ip_range = []
+		ip_range.append(start_IP)
+		while temp != end:
+			start[3] += 1
+			for i in (3, 2, 1):
+				if temp[i] == 256:
+					temp[i] = 0
+					temp[i-1] += 1
+			ip_range.append(".".join(map(str, temp)))
+		return ip_range
 	
 	# scans services via testing open ports on a given host.
 	# the host address can be a valid DNS name (like example.org) 
@@ -177,7 +227,28 @@ class MandoxServer(BaseHTTPRequestHandler):
 def usage():
 	print("Usage: python mandox.py")
 
+# expecting the config file '.mandox_config' in the same directory as 
+# the script is launched, otherwise using default values
+def read_config():
+	if os.path.exists('.mandox_config'):	
+		lines = tuple(open('.mandox_config', 'r'))
+		for line in lines:
+			service = line.split(':')[0]
+			IP_range = str(line.split(':')[1]).rstrip()
+			service_to_IP_range[service] = IP_range
+		logging.info('Found mandox config file ...')
+	else:
+		logging.info('No mandox config file found, using defaults.')
+		
+	logging.info('Using the following ports for scanning:')
+	for service in sorted(service_to_IP_range):
+		logging.info(' %s: %s' %(service, service_to_IP_range[service]))
+
+
 if __name__ == '__main__':
+	print("="*80)
+	read_config()
+	print("="*80)
 	try:
 		# extract and validate options and their arguments
 		opts, args = getopt.getopt(sys.argv[1:], 'hv', ['help','verbose'])
@@ -189,7 +260,7 @@ if __name__ == '__main__':
 				DEBUG = True
 		from BaseHTTPServer import HTTPServer
 		server = HTTPServer(('', 6543), MandoxServer)
-		logging.info('mandox server started, use {Ctrl+C} to shut-down ...')
+		print('\nmandox server started, use {Ctrl+C} to shut-down ...')
 		server.serve_forever()
 	except getopt.GetoptError, err:
 		print str(err)
