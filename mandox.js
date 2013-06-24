@@ -3,13 +3,18 @@ var BASE_MANDOX =  "http://" + window.location.host  + "/";
 var API_DS_SCAN = "ds/scan/";
 
 var PORT2SERVICE = {
-	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png" },
-	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" },
-	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png" },
-	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png" }
+	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP" },
+	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" , "schema" : "HTTP" },
+	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png", "schema" : "HTTP" },
+	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png", "schema" : "HTTP" },
+	"8080" : { "title" : "HBase REST Service", "icon" : "img/hbase.png", "schema" : "HTTP" },
+	"10000" : { "title" : "Hive Server", "icon" : "img/hive.png", "schema" : "other" },
+	"9083" : { "title" : "Hive Metastore Thrift", "icon" : "img/hive.png", "schema" : "other" },
+	"3306" : { "title" : "MySQL/JDBC", "icon" : "img/mysql.png", "schema" : "other" },
+	"28017" : { "title" : "MongoDB", "icon" : "img/mongodb.png", "schema" : "HTTP" },
+	"5984" : { "title" : "CouchDB/Futon", "icon" : "img/couchdb.png", "schema" : "HTTP" },
+	"8091" : { "title" : "Riak", "icon" : "img/riak.png", "schema" : "HTTP" }
 };
-
-
 
 $(document).ready(function(){
 	$("#scan").click(function(event){
@@ -58,7 +63,9 @@ function renderResults(data){
 	var buffer = "";
 	var portList = [];
 	var serviceTitle = "unknown";
+	var serviceSchema = "other";
 	var serviceIcon = "?";
+	var serviceURL = "";
 	
 	$("#out").html("");
 
@@ -72,15 +79,23 @@ function renderResults(data){
 				if(portList[p] in PORT2SERVICE){ // check if a known service
 					serviceTitle = PORT2SERVICE[portList[p]].title;
 					serviceIcon = PORT2SERVICE[portList[p]].icon;
-					serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
+					serviceSchema = PORT2SERVICE[portList[p]].schema;
 					buffer += "<div class='services'>";
 					buffer += " <img src='" + BASE_MANDOX + serviceIcon + "' alt='service icon' /> ";
-					buffer += " <a href='" + serviceURL  + "' target='_blank'>"+ serviceTitle + "</a>";
+					if(serviceSchema == "HTTP") {
+						serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
+						buffer += " <a href='" + serviceURL  + "' target='_blank'>"+ serviceTitle + "</a>";
+					}
+					else {
+						serviceURL =  r + ":" + portList[p]; 
+						buffer += serviceTitle + " at " + serviceURL;
+					}
 					buffer += "</div>";
 				}
 				else {
 					buffer += "<div class='services'>";
-					buffer += " Detected unknown service at <a href='" + serviceURL  + "' target='_blank'>"+ serviceURL + "</a>";
+					serviceURL = r + ":" + portList[p]; 
+					buffer += "Detected unknown service at " + serviceURL;
 					buffer += "</div>";
 				}
 			}
