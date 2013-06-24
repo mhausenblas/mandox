@@ -27,20 +27,23 @@ from os import curdir, sep
 
 DEBUG = True
 
-# the default ports to be scanned for active services.
-# if no '.mandox_config' file exists in the current directory, then
-# these values are used instead.
+# The default ports to be scanned for active services.
+#
+# If no '.mandox_config' file exists in the current directory, then these 
+# values  below are used as defaults.
 #
 # NOTE: the format of the config file '.mandox_config' is a new-line
-#       separated list of entries, each of the following form:
+#       separated list of entries (lines starting with a '#' are ignored),
+#       each of the following form:
 #
 #       SERVICE:START_PORT-END_PORT
 #
 #       Remember that the START_PORT is included and the END_PORT is excluded.
-#       so, for example, to scan service ABC on port 8080 you would supply the
+#       For example, to scan service ABC on port 8080 you would supply the
 #       following in the config file:
 #
-#      ABC:8080-8081
+#       ABC:8080-8081
+#
 service_to_port_range = { 
 	'HDFS'   : '50070-50076',
 	'HBase1' : '60010-60031',
@@ -158,10 +161,10 @@ class MandoxServer(BaseHTTPRequestHandler):
 			results = {}
 			for target_host in host_list:
 				open_ports = []
-				for service in sorted(service_to_IP_range): # scan all port ranges
-					logging.debug('   now checking for service %s in port range %s' %(service, service_to_IP_range[service]))
-					start_port = int(service_to_IP_range[service].split('-')[0])
-					end_port = int(service_to_IP_range[service].split('-')[1])
+				for service in sorted(service_to_port_range): # scan all port ranges
+					logging.debug('   now checking for service %s in port range %s' %(service, service_to_port_range[service]))
+					start_port = int(service_to_port_range[service].split('-')[0])
+					end_port = int(service_to_port_range[service].split('-')[1])
 					open_ports.extend(self.scan_services(target_host, start_port, end_port))
 				results[target_host] = open_ports
 			self.send_response(200)
@@ -232,17 +235,20 @@ def usage():
 def read_config():
 	if os.path.exists('.mandox_config'):	
 		lines = tuple(open('.mandox_config', 'r'))
+		service_to_port_range = {}
 		for line in lines:
-			service = line.split(':')[0]
-			IP_range = str(line.split(':')[1]).rstrip()
-			service_to_IP_range[service] = IP_range
+			l = str(line)
+			if not l.startswith('#'):
+				service = line.split(':')[0]
+				port_range = str(line.split(':')[1]).rstrip()
+				service_to_port_range[service] = port_range
 		logging.info('Found mandox config file ...')
 	else:
 		logging.info('No mandox config file found, using defaults.')
 		
 	logging.info('Using the following ports for scanning:')
-	for service in sorted(service_to_IP_range):
-		logging.info(' %s: %s' %(service, service_to_IP_range[service]))
+	for service in sorted(service_to_port_range):
+		logging.info(' %s: %s' %(service, service_to_port_range[service]))
 
 
 if __name__ == '__main__':
