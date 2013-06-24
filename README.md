@@ -10,6 +10,7 @@ cluster. Datasources can be anything that expose a network interface
 * gather logos-DONE
 * init UI (tabs, datasource pane)-DONE
 * add icons (datasource, inspect, definition/doc)
+* add more DS mappings to front-end
 
 
 ## Background
