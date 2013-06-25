@@ -4,7 +4,7 @@ body {
 	margin: 0em auto;
 	background: #fafafa;
 	padding: 0;
-	width: 60%;
+	width: 70%;
 	text-align: justify;
 }
 
@@ -97,12 +97,14 @@ table td {
 
 
 #info {
-	font-size: 50%;
-	text-align: center;
-	margin: 8em 0 0 0;
+	position: fixed;
+	bottom: 5px;
+	right: 5px;
+	font-size: 7pt;
 }
 
 #main {
+	padding: 0 0 5em 0;
 }
 
 
@@ -188,6 +190,7 @@ table td {
 .service-desc {
 	clear: float;
 	margin: 0 0 0 190px;
+	font-size: 85%;
 }
 
 .service-cmds img {
