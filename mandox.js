@@ -1,6 +1,8 @@
 var MANDOX_SERVICE_PORT = 6543;
 var BASE_MANDOX =  "http://" + window.location.host  + "/";
 var UNKNOWN_SERVICE_ICON = "img/unknown.png";
+var CMD_INSPECT_ICON = "img/cmd-inspect.png";
+var CMD_DOC_ICON = "img/cmd-doc.png";
 
 var API_DS_TEST = "ds/test";
 var API_DS_SCAN = "ds/scan/";
@@ -40,6 +42,7 @@ $(document).ready(function() {
 	$("#scan").click(function(event) {
 		scanDS();
 	});
+	
 });
 
 // scan datasources
@@ -113,6 +116,10 @@ function renderResults(data){
 						serviceURL =  r + ":" + portList[p]; 
 						buffer += serviceTitle + " at " + serviceURL;
 					}
+					buffer += "  <div class='service-cmds'>";
+					buffer += "   <img src='" + BASE_MANDOX + CMD_INSPECT_ICON + "' alt='inspect' title='inspect' /> ";
+					buffer += "   <img src='" + BASE_MANDOX + CMD_DOC_ICON + "' alt='documentation' title='documentation' /> ";
+					buffer += "  </div>";
 					buffer += " </div>";
 					buffer += "</div>";
 				}

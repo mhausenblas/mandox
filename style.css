@@ -147,3 +147,14 @@ table td {
 	clear: float;
 	margin: 0 0 0 190px;
 }
+
+.service-cmds img {
+	padding: 10px 20px 0 0;
+	opacity: 0.4;
+	filter: alpha(opacity=40);
+}
+
+.service-cmds img:hover {
+	opacity: 1.0;
+	filter: alpha(opacity=100);
+}
