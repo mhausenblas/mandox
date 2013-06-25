@@ -8,7 +8,6 @@ cluster. Datasources can be anything that expose a network interface
 
 ### Current
 
-* add up/down cmds to scan panel and hide scan panel when hitting scan
 * add extended test (5 hosts)
 * move PORT2SERVICE mapping to server-side and GET with init (.mandox_mapping)
 * when more than one host in result, show grid-overview (number of services detected)
@@ -27,6 +26,7 @@ cluster. Datasources can be anything that expose a network interface
 * add more DS mappings to front-end
 * add test function (end-to-end, that is, API to front-end)
 * add icons (inspect, definition/doc)
+* add up/down cmds to scan panel and hide scan panel when hitting scan
 
 
 ## Background

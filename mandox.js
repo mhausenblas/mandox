@@ -1,6 +1,8 @@
 var MANDOX_SERVICE_PORT = 6543;
 var BASE_MANDOX =  "http://" + window.location.host  + "/";
 var UNKNOWN_SERVICE_ICON = "img/unknown.png";
+var CMD_SHOW_ICON = "img/cmd-show.png";
+var CMD_HIDE_ICON = "img/cmd-hide.png";
 var CMD_INSPECT_ICON = "img/cmd-inspect.png";
 var CMD_DOC_ICON = "img/cmd-doc.png";
 
@@ -39,6 +41,22 @@ $(document).ready(function() {
 	}
 	
 	// UI interaction
+	
+	$("#toggle-scan").click(function(event) {
+		var scanOptionsState = $(this).attr("src");
+		
+		if(scanOptionsState == CMD_SHOW_ICON){
+			$("#scan-config").slideDown("600");
+			$(this).attr("src", CMD_HIDE_ICON);
+			$(this).attr("title", "hide scan options");
+		}
+		else {
+			$("#scan-config").slideUp("600");
+			$(this).attr("src", CMD_SHOW_ICON);
+			$(this).attr("title", "show scan options");
+		}
+	});
+	
 	$("#scan").click(function(event) {
 		scanDS();
 	});
@@ -72,11 +90,14 @@ function scanDS() {
 		success: function(d){
 			if(d) {
 				renderResults(d);
+				$("#toggle-scan").attr("src", CMD_SHOW_ICON);
+				$("#toggle-scan").attr("title", "show scan options");
+				$("#scan-config").slideUp("800");
 			}
 		},	
 		error:  function(msg){
 			$("#out").html("<p>There was a problem scanning the datasources:</p><code>" + msg.responseText + "</code>");
-			$("#results").slideDown('200');
+			$("#results").slideDown("400");
 		} 
 	});
 }
@@ -150,5 +171,5 @@ function renderResults(data){
 		buffer += "</div>";
 	}
 	$("#out").append(buffer);
-	$("#results").slideDown('200');
+	$("#results").slideDown("200");
 }
