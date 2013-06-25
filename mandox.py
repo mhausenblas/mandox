@@ -100,8 +100,16 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# serves an API call
 	def serve_api(self, apicall):
 		logging.info('API call: %s ' %(apicall))
-		if apicall == '/ds/':
-			logging.debug(' current list of discovered datasources')
+		if apicall == '/ds/test':
+			logging.debug(' list of all datasource types for test purposes')
+			results = {}
+			open_ports = ['50070', '60010', '10000', '3306', '28017', '5984', '8091']
+			results['127.0.0.1'] = open_ports
+			self.send_response(200)
+			self.send_header('Content-type', 'application/json')
+			self.end_headers()
+			logging.info('Success: %s ' %(results))
+			self.wfile.write(json.dumps(results))
 		elif apicall.startswith('/ds/scan/'):
 			logging.debug(' scanning datasources')
 			

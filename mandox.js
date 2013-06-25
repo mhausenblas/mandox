@@ -1,6 +1,8 @@
 var MANDOX_SERVICE_PORT = 6543;
 var BASE_MANDOX =  "http://" + window.location.host  + "/";
+var API_DS_TEST = "ds/test";
 var API_DS_SCAN = "ds/scan/";
+
 
 var PORT2SERVICE = {
 	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP" },
@@ -16,8 +18,24 @@ var PORT2SERVICE = {
 	"8091" : { "title" : "Riak", "icon" : "img/riak.png", "schema" : "HTTP" }
 };
 
-$(document).ready(function(){
-	$("#scan").click(function(event){
+$(document).ready(function() {
+	
+	var currentURL = window.location.href;
+	var fragID = "";
+	
+	// handle direct API calls, that is all URLs that contain a frag ID
+	if(currentURL.indexOf("#") != -1){ 
+		fragID = currentURL.substring(currentURL.indexOf("#") + 1);
+		console.log("Direct API call  " + fragID);
+		if(fragID == API_DS_TEST) {
+			$.getJSON(BASE_MANDOX + API_DS_TEST, function(d) {
+				renderResults(d);
+			});
+		}
+	}
+	
+	
+	$("#scan").click(function(event) {
 		scanDS();
 	});
 });

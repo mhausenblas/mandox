@@ -11,6 +11,7 @@ cluster. Datasources can be anything that expose a network interface
 * init UI (tabs, datasource pane)-DONE
 * implement host/IP range clientside-DONE
 * add more DS mappings to front-end-DONE
+* add test function (end-to-end, that is, API to front-end)
 * add icons (datasource, inspect, definition/doc)
 
 
