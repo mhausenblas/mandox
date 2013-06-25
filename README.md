@@ -13,6 +13,8 @@ cluster. Datasources can be anything that expose a network interface
 * add more DS mappings to front-end-DONE
 * add test function (end-to-end, that is, API to front-end)-DONE
 * add icons (inspect, definition/doc)
+* write launch bash script (nohup, background, etc)
+* add MapR specific stuff (MCS, NFS, etc)
 
 
 ## Background
