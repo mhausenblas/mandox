@@ -9,7 +9,7 @@ var API_DS_SCAN = "ds/scan/";
 
 
 var PORT2SERVICE = {
-	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP" },
+	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP", "docURL" : "http://hadoop.apache.org/docs/stable/hdfs_user_guide.html" },
 	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" , "schema" : "HTTP" },
 	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png", "schema" : "HTTP" },
 	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png", "schema" : "HTTP" },
@@ -103,6 +103,7 @@ function renderResults(data){
 					serviceTitle = PORT2SERVICE[portList[p]].title;
 					serviceIcon = PORT2SERVICE[portList[p]].icon;
 					serviceSchema = PORT2SERVICE[portList[p]].schema;
+					serviceDocURL = PORT2SERVICE[portList[p]].docURL;
 					buffer += "<div class='services'>";
 					buffer += " <div class='service-icon'>";
 					buffer += "  <img src='" + BASE_MANDOX + serviceIcon + "' alt='service icon' /> ";
@@ -117,8 +118,15 @@ function renderResults(data){
 						buffer += serviceTitle + " at " + serviceURL;
 					}
 					buffer += "  <div class='service-cmds'>";
-					buffer += "   <img src='" + BASE_MANDOX + CMD_INSPECT_ICON + "' alt='inspect' title='inspect' /> ";
-					buffer += "   <img src='" + BASE_MANDOX + CMD_DOC_ICON + "' alt='documentation' title='documentation' /> ";
+					if(serviceSchema == "HTTP") {
+						serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
+						buffer += "<a href='" + serviceURL  + "' target='_blank' title='Inspect "+ serviceTitle + "'>";
+						buffer += "<img src='" + BASE_MANDOX + CMD_INSPECT_ICON + "' alt='inspect' />";
+						buffer += "</a>";
+					}
+					buffer += "<a href='" + serviceDocURL  + "' target='_blank' title='View documentation for "+ serviceTitle + "'>";					
+					buffer += "<img src='" + BASE_MANDOX + CMD_DOC_ICON + "' alt='documentation' />";
+					buffer += "</a>";
 					buffer += "  </div>";
 					buffer += " </div>";
 					buffer += "</div>";
