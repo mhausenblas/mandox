@@ -6,15 +6,27 @@ cluster. Datasources can be anything that expose a network interface
 
 ## To do
 
-* write auto discovery-DONE
-* gather logos-DONE
-* init UI (tabs, datasource pane)-DONE
-* implement host/IP range clientside-DONE
-* add more DS mappings to front-end-DONE
-* add test function (end-to-end, that is, API to front-end)-DONE
-* add icons (inspect, definition/doc)
+### Current
+
+* add up/down cmds to scan panel and hide scan panel when hitting scan
+* add extended test (5 hosts)
+* move PORT2SERVICE mapping to server-side and GET with init (.mandox_mapping)
+* when more than one host in result, show grid-overview (number of services detected)
+* add MapR specific stuff (MCS, NFS, CLDB, etc)
+* Detailed View | Compact View | Reporting View panes in result
+* Report View: generate nice PDF for print
 * write launch bash script (nohup, background, etc)
-* add MapR specific stuff (MCS, NFS, etc)
+* write  documentation: config files, deployment guide, UI screen shots, screen cast
+
+## Done
+
+* write auto discovery via server-side port scanner (IP range/host list)
+* gather logos of services
+* init UI (tabs, datasource pane)
+* implement host/IP range clientside
+* add more DS mappings to front-end
+* add test function (end-to-end, that is, API to front-end)
+* add icons (inspect, definition/doc)
 
 
 ## Background
