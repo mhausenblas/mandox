@@ -100,17 +100,28 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# serves an API call
 	def serve_api(self, apicall):
 		logging.info('API call: %s ' %(apicall))
-		if apicall == '/ds/test':
-			logging.debug(' list of all datasource types for test purposes')
+		if apicall == '/ds/test/simple':
+			logging.debug(' simple test - list of all datasource types')
 			results = {}
 			# list all known per type and last one is an unknown one
 			open_ports = ['50070', '60010', '10000', '3306', '28017', '5984', '8091', '12345']
 			results['127.0.0.1'] = open_ports
-			self.send_response(200)
-			self.send_header('Content-type', 'application/json')
-			self.end_headers()
-			logging.info('Success: %s ' %(results))
-			self.wfile.write(json.dumps(results))
+			self.send_JSON(results)
+		elif apicall == '/ds/test/multiple':
+			logging.debug(' multiple hosts test')
+			results = {}
+			# randomly distributed list over five hosts
+			open_ports = ['50070', '60010']
+			results['node1.example.com'] = open_ports
+			open_ports = ['3306', '28017', '5984', '8091', '12345']
+			results['node2.example.com'] = open_ports
+			open_ports = ['50070', '10000', '3306']
+			results['node3.example.com'] = open_ports
+			open_ports = ['50075', '60030']
+			results['node4.example.com'] = open_ports
+			open_ports = ['5984', '8091']
+			results['node5.example.com'] = open_ports
+			self.send_JSON(results)
 		elif apicall.startswith('/ds/scan/'):
 			logging.debug(' scanning datasources')
 			
@@ -177,11 +188,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 						end_port = int(service_to_port_range[service].split('-')[1])
 						open_ports.extend(self.scan_services(target_host, start_port, end_port))
 					results[target_host] = open_ports
-			self.send_response(200)
-			self.send_header('Content-type', 'application/json')
-			self.end_headers()
-			logging.info('Success: %s ' %(results))
-			self.wfile.write(json.dumps(results))
+			self.send_JSON(results)
 		except:
 			logging.info('Server error while scanning hosts %s' %host_range)
 			self.send_error(500, 'Server error while scanning hosts %s' %host_range)
@@ -239,6 +246,14 @@ class MandoxServer(BaseHTTPRequestHandler):
 		
 		return open_ports
 	
+	# sends a HTTP response as JSON payload 
+	def send_JSON(self, payload):
+		self.send_response(200)
+		self.send_header('Content-type', 'application/json')
+		self.end_headers()
+		logging.info('Success: %s ' %(payload))
+		self.wfile.write(json.dumps(payload))
+		
 def usage():
 	print("Usage: python mandox.py")
 

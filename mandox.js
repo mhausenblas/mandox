@@ -6,7 +6,6 @@ var CMD_HIDE_ICON = "img/cmd-hide.png";
 var CMD_INSPECT_ICON = "img/cmd-inspect.png";
 var CMD_DOC_ICON = "img/cmd-doc.png";
 
-var API_DS_TEST = "ds/test";
 var API_DS_SCAN = "ds/scan/";
 
 
@@ -33,11 +32,9 @@ $(document).ready(function() {
 	if(currentURL.indexOf("#") != -1){ 
 		fragID = currentURL.substring(currentURL.indexOf("#") + 1);
 		console.log("Direct API call  " + fragID);
-		if(fragID == API_DS_TEST) {
-			$.getJSON(BASE_MANDOX + API_DS_TEST, function(d) {
-				renderResults(d);
-			});
-		}
+		$.getJSON(BASE_MANDOX + fragID, function(d) {
+			renderResults(d);
+		});
 	}
 	
 	// UI interaction
