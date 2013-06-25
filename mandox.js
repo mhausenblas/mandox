@@ -1,5 +1,7 @@
 var MANDOX_SERVICE_PORT = 6543;
 var BASE_MANDOX =  "http://" + window.location.host  + "/";
+var UNKNOWN_SERVICE_ICON = "img/unknown.png";
+
 var API_DS_TEST = "ds/test";
 var API_DS_SCAN = "ds/scan/";
 
@@ -34,7 +36,7 @@ $(document).ready(function() {
 		}
 	}
 	
-	
+	// UI interaction
 	$("#scan").click(function(event) {
 		scanDS();
 	});
@@ -99,7 +101,10 @@ function renderResults(data){
 					serviceIcon = PORT2SERVICE[portList[p]].icon;
 					serviceSchema = PORT2SERVICE[portList[p]].schema;
 					buffer += "<div class='services'>";
-					buffer += " <img src='" + BASE_MANDOX + serviceIcon + "' alt='service icon' /> ";
+					buffer += " <div class='service-icon'>";
+					buffer += "  <img src='" + BASE_MANDOX + serviceIcon + "' alt='service icon' /> ";
+					buffer += " </div>";
+					buffer += " <div class='service-desc'>";
 					if(serviceSchema == "HTTP") {
 						serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
 						buffer += " <a href='" + serviceURL  + "' target='_blank'>"+ serviceTitle + "</a>";
@@ -108,12 +113,18 @@ function renderResults(data){
 						serviceURL =  r + ":" + portList[p]; 
 						buffer += serviceTitle + " at " + serviceURL;
 					}
+					buffer += " </div>";
 					buffer += "</div>";
 				}
-				else {
+				else { // an unknown service: port mapping in PORT2SERVICE not defined
 					buffer += "<div class='services'>";
+					buffer += " <div class='service-icon'>";
+					buffer += "  <img src='" + BASE_MANDOX + UNKNOWN_SERVICE_ICON + "' alt='unknown service icon' /> ";
+					buffer += " </div>";
+					buffer += " <div class='service-desc'>";
 					serviceURL = r + ":" + portList[p]; 
 					buffer += "Detected unknown service at " + serviceURL;
+					buffer += " </div>";
 					buffer += "</div>";
 				}
 			}

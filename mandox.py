@@ -103,7 +103,8 @@ class MandoxServer(BaseHTTPRequestHandler):
 		if apicall == '/ds/test':
 			logging.debug(' list of all datasource types for test purposes')
 			results = {}
-			open_ports = ['50070', '60010', '10000', '3306', '28017', '5984', '8091']
+			# list all known per type and last one is an unknown one
+			open_ports = ['50070', '60010', '10000', '3306', '28017', '5984', '8091', '12345']
 			results['127.0.0.1'] = open_ports
 			self.send_response(200)
 			self.send_header('Content-type', 'application/json')
