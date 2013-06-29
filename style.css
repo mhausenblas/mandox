@@ -173,14 +173,15 @@ table td {
 
 .host {
 	padding: 0 0 1em 0;
+
 }
 
 .services {
 	margin: 2em 0 0 0;
-	padding: 5px 5px 20px 5px;
+	padding: 10px 5px 10px 5px;
 	border-bottom: 1px solid #f0f0f0;
 	border-left: 3px solid #f0f0f0;
-	
+	background: #fff;	
 	height: 60px;
 }
 
