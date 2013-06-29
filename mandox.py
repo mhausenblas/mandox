@@ -21,6 +21,7 @@ import json
 import socket
 import subprocess
 import re
+import csv
 
 from BaseHTTPServer import BaseHTTPRequestHandler
 from os import curdir, sep
@@ -29,8 +30,8 @@ DEBUG = False
 
 # The default ports to be scanned for active services.
 #
-# If no '.mandox_config' file exists in the current directory, then these 
-# values  below are used as defaults.
+# If no .mandox_config file exists in the current directory, the
+# values below are used as defaults.
 #
 # NOTE: the format of the config file '.mandox_config' is a new-line
 #       separated list of entries (lines starting with a '#' are ignored),
@@ -44,6 +45,7 @@ DEBUG = False
 #
 #       ABC:8080-8081
 #
+# Gets overwritten on start-up in read_config(), if .mandox_config exists.
 service_to_port_range = { 
 	'HDFS'   : '50070-50076',
 	'HBase1' : '60010-60031',
@@ -51,6 +53,11 @@ service_to_port_range = {
 	'Hive1'  : '10000-10001',
 	'Hive2'  : '9083-9084'
 }
+
+# The mapping of the ports to services, incl. all info needed (icon, doc)
+# Gets populated on start-up in read_mapping() 
+port_to_service = {}
+
 
 if DEBUG:
 	FORMAT = '%(asctime)-0s %(levelname)s %(message)s [at line %(lineno)d]'
@@ -97,7 +104,10 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# serves an API call
 	def serve_api(self, apicall):
 		logging.info('API call: %s ' %(apicall))
-		if apicall == '/ds/test/simple':
+		if apicall == '/ds/mappings':
+			logging.debug(' listing port mappings')
+			self.send_JSON(port_to_service)
+		elif apicall == '/ds/test/simple':
 			logging.debug(' simple test - list of all datasource types')
 			results = {}
 			# list all known per type and last one is an unknown one
@@ -250,17 +260,18 @@ class MandoxServer(BaseHTTPRequestHandler):
 		self.end_headers()
 		logging.info('Success: %s ' %(payload))
 		self.wfile.write(json.dumps(payload))
-		
+	
+
 def usage():
 	print("Usage: python mandox.py")
 
 # expecting the config file '.mandox_config' in the same directory as 
 # the script is launched, otherwise using default values as defined
 # in the top of this script, in service_to_port_range
-def read_config():
+def read_config(defaults):
+	service_to_port_range = {}
 	if os.path.exists('.mandox_config'):	
 		lines = tuple(open('.mandox_config', 'r'))
-		service_to_port_range = {}
 		for line in lines:
 			l = str(line).strip()
 			if l and not l.startswith('#'): # not empty or comment line
@@ -270,15 +281,49 @@ def read_config():
 		logging.info('Found mandox config file ...')
 	else:
 		logging.info('No mandox config file found, using defaults.')
-		
+		service_to_port_range = defaults
 	logging.info('Using the following ports for scanning:')
 	for service in sorted(service_to_port_range):
 		logging.info(' %s: %s' %(service, service_to_port_range[service]))
+	return service_to_port_range
 
+# expecting the mapping file '.mandox_mapping' in the same directory as 
+# the script is launched, otherwise fails. If the mapping file is found
+# and successfully parsed it returns True, if not, False.
+def read_mapping():
+	port_to_service = {}
+	if os.path.exists('.mandox_mapping'):
+		mfile = open('.mandox_mapping', 'rb')
+		reader = csv.reader(mfile)
+		rownumber = 0
+		for row in reader:
+			if rownumber != 0: # ignore header row
+				port_to_service[row[0]] =  { 
+				 "title"  : row[1],
+				 "icon"   : row[2],
+				 "schema" : row[3],
+				 "docURL" : row[4] 
+				}
+			rownumber += 1
+		mfile.close()
+		logging.info('Using the following mapping:')
+		for service in sorted(port_to_service):
+			logging.info(' %s: %s' %(service, port_to_service[service]))
+		return True, port_to_service # indicate success
+	else:
+		logging.error('No mandox mapping file found, stopping immediately.')
+		return False, None # indicate failure
+
+
+################################################################################
+## Main script
 
 if __name__ == '__main__':
 	print("="*80)
-	read_config()
+	service_to_port_range = read_config(service_to_port_range)
+	mapping_found, port_to_service = read_mapping()
+	if not mapping_found:
+		sys.exit(2)
 	print("="*80)
 	try:
 		# extract and validate options and their arguments
