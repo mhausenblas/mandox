@@ -311,7 +311,9 @@ def read_mapping():
 			logging.info(' %s: %s' %(service, port_to_service[service]))
 		return True, port_to_service # indicate success
 	else:
-		logging.error('No mandox mapping file found, stopping immediately.')
+		logging.error('ERROR: no mandox mapping file found, stopping immediately!')
+		logging.error('       Make sure you have a .mandox_mapping file in the same directory as you launch this script.')
+		logging.error('       If you don\'t have such a file you can get a fresh one from https://github.com/mhausenblas/mandox')
 		return False, None # indicate failure
 
 
