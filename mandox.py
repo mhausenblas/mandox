@@ -258,7 +258,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header('Content-type', 'application/json')
 		self.end_headers()
-		logging.info('Success: %s ' %(payload))
+		logging.debug('Success: %s ' %(payload))
 		self.wfile.write(json.dumps(payload))
 	
 
