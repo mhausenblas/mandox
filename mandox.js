@@ -11,16 +11,17 @@ var API_DS_SCAN = "ds/scan/";
 
 var PORT2SERVICE = {
 	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP", "docURL" : "http://hadoop.apache.org/docs/stable/hdfs_user_guide.html" },
-	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" , "schema" : "HTTP" },
-	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png", "schema" : "HTTP" },
-	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png", "schema" : "HTTP" },
-	"8080" : { "title" : "HBase REST Service", "icon" : "img/hbase.png", "schema" : "HTTP" },
-	"10000" : { "title" : "Hive Server", "icon" : "img/hive.png", "schema" : "other" },
-	"9083" : { "title" : "Hive Metastore Thrift", "icon" : "img/hive.png", "schema" : "other" },
-	"3306" : { "title" : "MySQL/JDBC", "icon" : "img/mysql.png", "schema" : "other" },
-	"28017" : { "title" : "MongoDB", "icon" : "img/mongodb.png", "schema" : "HTTP" },
-	"5984" : { "title" : "CouchDB/Futon", "icon" : "img/couchdb.png", "schema" : "HTTP" },
-	"8091" : { "title" : "Riak", "icon" : "img/riak.png", "schema" : "HTTP" }
+	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" , "schema" : "HTTP", "docURL" : "http://hadoop.apache.org/docs/stable/hdfs_user_guide.html" },
+	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
+	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
+	"8080" : { "title" : "HBase REST Service", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
+	"10000" : { "title" : "Hive Server", "icon" : "img/hive.png", "schema" : "other", "docURL" : "https://cwiki.apache.org/confluence/display/Hive/GettingStarted#" },
+	"9083" : { "title" : "Hive Metastore Thrift", "icon" : "img/hive.png", "schema" : "other", "docURL" : "https://cwiki.apache.org/confluence/display/Hive/GettingStarted#" },
+	"3306" : { "title" : "MySQL", "icon" : "img/mysql.png", "schema" : "other", "docURL" : "http://dev.mysql.com/doc/" },
+	"5432" : { "title" : "PostgreSQL", "icon" : "img/postgresql.png", "schema" : "other", "docURL" : "http://www.postgresql.org/docs/" },
+	"28017" : { "title" : "MongoDB", "icon" : "img/mongodb.png", "schema" : "HTTP", "docURL" : "http://docs.mongodb.org/manual/" },
+	"5984" : { "title" : "CouchDB", "icon" : "img/couchdb.png", "schema" : "HTTP", "docURL" : "http://docs.couchdb.org/en/latest/" },
+	"8091" : { "title" : "Riak", "icon" : "img/riak.png", "schema" : "HTTP", "docURL" : "http://docs.basho.com/riak/latest/" }
 };
 
 $(document).ready(function() {

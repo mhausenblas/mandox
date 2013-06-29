@@ -49,10 +49,7 @@ service_to_port_range = {
 	'HBase1' : '60010-60031',
 	'HBase2' : '8080-8081',
 	'Hive1'  : '10000-10001',
-	'Hive2'  : '9083-9084',
-	'MongoDB': '28017-28018',
-	'CouchDB': '5984-5985',
-	'Riak'   : '8091-8092'
+	'Hive2'  : '9083-9084'
 }
 
 if DEBUG:
@@ -104,7 +101,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 			logging.debug(' simple test - list of all datasource types')
 			results = {}
 			# list all known per type and last one is an unknown one
-			open_ports = ['50070', '60010', '10000', '3306', '28017', '5984', '8091', '12345']
+			open_ports = ['50070', '60010', '10000', '3306', '5432', '28017', '5984', '8091', '12345']
 			results['127.0.0.1'] = open_ports
 			self.send_JSON(results)
 		elif apicall == '/ds/test/multiple':
@@ -119,7 +116,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 			results['node3.example.com'] = open_ports
 			open_ports = ['50075', '60030']
 			results['node4.example.com'] = open_ports
-			open_ports = ['5984', '8091']
+			open_ports = ['5984', '8091', '5432']
 			results['node5.example.com'] = open_ports
 			self.send_JSON(results)
 		elif apicall.startswith('/ds/scan/'):
