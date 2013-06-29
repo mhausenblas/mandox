@@ -6,6 +6,7 @@ var API_DS_SCAN = "ds/scan/";
 
 // UI graphical elements:
 var UNKNOWN_SERVICE_ICON = "img/unknown.png";
+var NODE_ICON = "img/node.png";
 var CMD_SHOW_ICON = "img/cmd-show.png";
 var CMD_HIDE_ICON = "img/cmd-hide.png";
 var CMD_INSPECT_ICON = "img/cmd-inspect.png";
@@ -27,7 +28,9 @@ $(document).ready(function() {
 		fragID = currentURL.substring(currentURL.indexOf("#") + 1);
 		console.log("Direct API call  " + fragID);
 		$.getJSON(BASE_MANDOX + fragID, function(d) {
-			renderResults(d);
+			$("#out").html("");
+			renderGridOverview(d);
+			renderResultsDetailed(d);
 		});
 	}
 	
@@ -87,7 +90,9 @@ function scanDS() {
 		dataType : "json",
 		success: function(d){
 			if(d) {
-				renderResults(d);
+				$("#out").html("");
+				renderGridOverview(d);
+				renderResultsDetailed(d);
 				$("#toggle-scan").attr("src", CMD_SHOW_ICON);
 				$("#toggle-scan").attr("title", "show scan options");
 				$("#scan-config").slideUp("800");
@@ -100,8 +105,28 @@ function scanDS() {
 	});
 }
 
+
+// renders a grid-like overview of the host results
+function renderGridOverview(data) {
+	var buffer = "";
+	
+	console.log("Have results for " + numHosts(data) + " hosts");
+	
+	if(numHosts(data) > 1) { // more than one host, show grid-overview
+		buffer += "<div id='grid-overview'>";
+		for(r in data) { // iterate over host results
+			buffer += "<div class='host-preview'>";
+			buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ r +"' alt='"+ r +"' /> ";
+			buffer += " " + data[r].length + " ";
+			buffer += "</div>";
+		}
+		buffer += " </div>";
+		$("#out").append(buffer);
+	}
+}
+
 // renders the results
-function renderResults(data){
+function renderResultsDetailed(data){
 	var buffer = "";
 	var portList = [];
 	var serviceTitle = "unknown";
@@ -109,8 +134,7 @@ function renderResults(data){
 	var serviceIcon = "?";
 	var serviceURL = "";
 	
-	$("#out").html("");
-
+	buffer += "<div id='hosts'>";
 	for(r in data) { // iterate over host results
 		console.log("On host " + r + " I found the following open ports:" + data[r]);
 		buffer += "<h2>Host: " + r + "</h2>";
@@ -168,6 +192,20 @@ function renderResults(data){
 		}
 		buffer += "</div>";
 	}
+	buffer += "</div>";
 	$("#out").append(buffer);
 	$("#results").slideDown("200");
 }
+
+// as JS doesn't have a concept for 'number of entries in a dictionary'
+// here is the workaround for it:
+function numHosts(result){
+	var key, count = 0;
+	for(key in result) {
+		if(result.hasOwnProperty(key)) {
+			count++;
+		}
+	}
+	return count;
+}
+
