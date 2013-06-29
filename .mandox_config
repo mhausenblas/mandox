@@ -1,3 +1,19 @@
+################################################################################
+#
+# This is the mandox configuration file. It defines the port range that will 
+# be scanned on the each host supplied. The format used here is a new-line
+# separated list of entries (lines starting with a '#' are ignored),
+# each of the following form:
+#
+# SERVICE:START_PORT-END_PORT
+#
+# Note that the START_PORT is included and the END_PORT is excluded.
+# For example, to scan service ABC on port 8080 you would add the
+# following line, here:
+# 
+# ABC:8080-8081
+################################################################################
+
 HDFS:50070-50076
 # HBase1:60010-60031
 # HBase2:8080-8081

@@ -255,15 +255,16 @@ def usage():
 	print("Usage: python mandox.py")
 
 # expecting the config file '.mandox_config' in the same directory as 
-# the script is launched, otherwise using default values
+# the script is launched, otherwise using default values as defined
+# in the top of this script, in service_to_port_range
 def read_config():
 	if os.path.exists('.mandox_config'):	
 		lines = tuple(open('.mandox_config', 'r'))
 		service_to_port_range = {}
 		for line in lines:
-			l = str(line)
-			if not l.startswith('#'):
-				service = line.split(':')[0]
+			l = str(line).strip()
+			if l and not l.startswith('#'): # not empty or comment line
+				service = line.split(':')[0] # separate service from port range
 				port_range = str(line.split(':')[1]).rstrip()
 				service_to_port_range[service] = port_range
 		logging.info('Found mandox config file ...')
