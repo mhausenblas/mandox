@@ -1,0 +1,13 @@
+port,title,icon,schema,docURL
+50070,HDFS Namenode,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
+50075,HDFS Datanodes,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
+60010,HBase Master,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
+60030,HBase Regionservers,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
+8080,HBase REST Service,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
+10000,Hive Server,img/hive.png,other,https://cwiki.apache.org/confluence/display/Hive/GettingStarted
+9083,Hive Metastore Thrift,img/hive.png,other,https://cwiki.apache.org/confluence/display/Hive/GettingStarted
+3306,MySQL,img/mysql.png,other,http://dev.mysql.com/doc/
+5432,PostgreSQL,img/postgresql.png,other,http://www.postgresql.org/docs/
+28017,MongoDB,img/mongodb.png,HTTP,http://docs.mongodb.org/manual/
+5984,CouchDB,img/couchdb.png,HTTP,http://docs.couchdb.org/en/latest/
+8091,Riak,img/riak.png,HTTP,http://docs.basho.com/riak/latest/
