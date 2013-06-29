@@ -1,6 +1,6 @@
 port,title,icon,schema,docURL
 50070,HDFS Namenode,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
-50075,HDFS Datanodes,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
+50075,HDFS Datanode,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
 60010,HBase Master,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
 60030,HBase Regionservers,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
 8080,HBase REST Service,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt

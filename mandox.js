@@ -109,16 +109,25 @@ function scanDS() {
 // renders a grid-like overview of the host results
 function renderGridOverview(data) {
 	var buffer = "";
+	var hosts = numHosts(data);
 	
-	console.log("Have results for " + numHosts(data) + " hosts");
+	console.log("Have results for " + hosts + " hosts");
 	
-	if(numHosts(data) > 1) { // more than one host, show grid-overview
+	if(hosts > 1) { // more than one host, show grid-overview
 		buffer += "<div id='grid-overview'>";
-		for(r in data) { // iterate over host results
-			buffer += "<div class='host-preview'>";
-			buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ r +"' alt='"+ r +"' /> ";
-			buffer += " " + data[r].length + " ";
-			buffer += "</div>";
+		
+		if(hosts < 20) { // less than 20 hosts, we can still be generous
+			for(r in data) { // iterate over host results
+				buffer += "<div class='host-preview'>";
+				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ r +"' alt='" + r + "' /> ";
+				buffer += " " + data[r].length + " ";
+				buffer += "</div>";
+			}
+		}
+		else { // more than 20 hosts, show compact overview
+			for(r in data) { // iterate over host results
+				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' width='12px' title='"+ r + " (" + data[r].length + ")' alt='" + r + "' /> ";
+			}
 		}
 		buffer += " </div>";
 		$("#out").append(buffer);

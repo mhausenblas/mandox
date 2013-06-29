@@ -129,6 +129,17 @@ class MandoxServer(BaseHTTPRequestHandler):
 			open_ports = ['5984', '8091', '5432']
 			results['node5.example.com'] = open_ports
 			self.send_JSON(results)
+		elif apicall == '/ds/test/massive':
+			logging.debug(' massive number of hosts test')
+			results = {}
+			# randomly distributed list over five hosts
+			for i in range(1,200): 
+				host_name = 'node' + str(i) + '.example.com'
+				if i == 1:
+					results[host_name] = [50070] # NN
+				else:
+					results[host_name] = [50075] # DN
+			self.send_JSON(results)
 		elif apicall.startswith('/ds/scan/'):
 			logging.debug(' scanning datasources')
 			

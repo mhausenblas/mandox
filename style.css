@@ -114,13 +114,10 @@ table td {
 
 #grid-overview {
 	padding: 1em 0 1em 0;
-	text-align: center;
-	height: 100px;
 }
 
 #grid-overview img {
-	display: block;
-	padding: 20px;
+	padding: 2px;
 	opacity: 0.4;
 	filter: alpha(opacity=40);
 	cursor: pointer;
@@ -202,8 +199,13 @@ table td {
 	color: #a0a0a0;
 	font-weight: 100;
 	text-shadow: 3px 3px 5px #ccc;
+	text-align: center;
 }
 
+.host-preview img {
+	display: block;
+	margin: 20px;
+}
 
 .host {
 	padding: 0 0 1em 0;
