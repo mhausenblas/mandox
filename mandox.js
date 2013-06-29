@@ -1,33 +1,26 @@
+// mandox service parameter and API paths:
 var MANDOX_SERVICE_PORT = 6543;
 var BASE_MANDOX =  "http://" + window.location.host  + "/";
+var API_DS_MAP = "ds/mappings";
+var API_DS_SCAN = "ds/scan/";
+
+// UI graphical elements:
 var UNKNOWN_SERVICE_ICON = "img/unknown.png";
 var CMD_SHOW_ICON = "img/cmd-show.png";
 var CMD_HIDE_ICON = "img/cmd-hide.png";
 var CMD_INSPECT_ICON = "img/cmd-inspect.png";
 var CMD_DOC_ICON = "img/cmd-doc.png";
 
-var API_DS_SCAN = "ds/scan/";
+// service rendering variables:
+var PORT2SERVICE = {}; // is populated in init() via API_DS_MAP call
 
-
-var PORT2SERVICE = {
-	"50070" : { "title" : "HDFS Namenode", "icon" : "img/hdfs.png", "schema" : "HTTP", "docURL" : "http://hadoop.apache.org/docs/stable/hdfs_user_guide.html" },
-	"50075" : { "title" : "HDFS Datanodes", "icon" : "img/hdfs.png" , "schema" : "HTTP", "docURL" : "http://hadoop.apache.org/docs/stable/hdfs_user_guide.html" },
-	"60010" : { "title" : "HBase Master", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
-	"60030" : { "title" : "HBase Regionservers", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
-	"8080" : { "title" : "HBase REST Service", "icon" : "img/hbase.png", "schema" : "HTTP", "docURL" : "http://hbase.apache.org/book.html#ops_mgt" },
-	"10000" : { "title" : "Hive Server", "icon" : "img/hive.png", "schema" : "other", "docURL" : "https://cwiki.apache.org/confluence/display/Hive/GettingStarted#" },
-	"9083" : { "title" : "Hive Metastore Thrift", "icon" : "img/hive.png", "schema" : "other", "docURL" : "https://cwiki.apache.org/confluence/display/Hive/GettingStarted#" },
-	"3306" : { "title" : "MySQL", "icon" : "img/mysql.png", "schema" : "other", "docURL" : "http://dev.mysql.com/doc/" },
-	"5432" : { "title" : "PostgreSQL", "icon" : "img/postgresql.png", "schema" : "other", "docURL" : "http://www.postgresql.org/docs/" },
-	"28017" : { "title" : "MongoDB", "icon" : "img/mongodb.png", "schema" : "HTTP", "docURL" : "http://docs.mongodb.org/manual/" },
-	"5984" : { "title" : "CouchDB", "icon" : "img/couchdb.png", "schema" : "HTTP", "docURL" : "http://docs.couchdb.org/en/latest/" },
-	"8091" : { "title" : "Riak", "icon" : "img/riak.png", "schema" : "HTTP", "docURL" : "http://docs.basho.com/riak/latest/" }
-};
-
+// main event loop:
 $(document).ready(function() {
 	
 	var currentURL = window.location.href;
 	var fragID = "";
+	
+	init(); // make sure the get the port-service mapping first
 	
 	// handle direct API calls, that is all URLs that contain a frag ID
 	if(currentURL.indexOf("#") != -1){ 
@@ -60,6 +53,13 @@ $(document).ready(function() {
 	});
 	
 });
+
+// retrieves the port-service mapping from the mandox service, once on start-up
+function init() {
+	$.getJSON(BASE_MANDOX + API_DS_MAP, function(d) {
+		PORT2SERVICE = d;
+	});
+}
 
 // scan datasources
 function scanDS() {
