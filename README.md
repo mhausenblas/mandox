@@ -10,8 +10,6 @@ cluster. Datasources can be anything that expose a network interface
 
 ### Current
 
-* Detailed View | Compact View | Reporting View panes in result
-* Report View: generate nice PDF for print
 * write launch bash script (nohup, background, etc)
 * write  documentation: config files, deployment guide, screen shots, screen cast
 
@@ -29,6 +27,7 @@ cluster. Datasources can be anything that expose a network interface
 * move PORT2SERVICE mapping to server-side and GET with init (.mandox_mapping)
 * when more than one host in result, show grid-overview (number of services detected)
 * add MapR specific stuff (MCS, NFS, CLDB, etc)
+* Report View: generate nice PDF for print
 
 ## Background
 

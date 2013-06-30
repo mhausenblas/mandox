@@ -112,6 +112,18 @@ table td {
 	display: none;
 }
 
+#gen-report {
+	opacity: 0.4;
+	filter: alpha(opacity=40);
+	cursor: pointer;
+}
+
+#gen-report:hover {
+	opacity: 1.0;
+	filter: alpha(opacity=100);
+}
+
+
 #grid-overview {
 	padding: 1em 0 1em 0;
 }

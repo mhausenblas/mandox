@@ -11,6 +11,7 @@ var CMD_SHOW_ICON = "img/cmd-show.png";
 var CMD_HIDE_ICON = "img/cmd-hide.png";
 var CMD_INSPECT_ICON = "img/cmd-inspect.png";
 var CMD_DOC_ICON = "img/cmd-doc.png";
+var CMD_REPORT_ICON = "img/cmd-report.png";
 
 // service rendering variables:
 var PORT2SERVICE = {}; // is populated in init() via API_DS_MAP call
@@ -29,9 +30,10 @@ $(document).ready(function() {
 		fragID = currentURL.substring(currentURL.indexOf("#") + 1);
 		console.log("Direct API call  " + fragID);
 		$.getJSON(BASE_MANDOX + fragID, function(d) {
-			$("#out").html("<h1 id='ds-home'>Datasources</h1>");
+			resultHeader();
 			renderGridOverview(d);
 			renderResultsDetailed(d);
+			hideScanOptions();
 		});
 	}
 	
@@ -56,6 +58,9 @@ $(document).ready(function() {
 		scanDS();
 	});
 	
+	$("#gen-report").live("click", function(event){
+		renderReport();
+	});
 });
 
 // retrieves the port-service mapping from the mandox service, once on start-up
@@ -63,6 +68,19 @@ function init() {
 	$.getJSON(BASE_MANDOX + API_DS_MAP, function(d) {
 		PORT2SERVICE = d;
 	});
+}
+
+// adds the result header to the output region
+function resultHeader(){
+	$("#out").html("<div style='text-align:right; padding:10px;'><img id='gen-report' src='" + BASE_MANDOX + CMD_REPORT_ICON + "' title='generate a PDF report' alt='generate a PDF report' /></div>");
+	$("#out").append("<h1 id='ds-home'>Datasources</h1>");
+}
+
+// hides the pane with the scan options
+function hideScanOptions(){
+	$("#toggle-scan").attr("src", CMD_SHOW_ICON);
+	$("#toggle-scan").attr("title", "show scan options");
+	$("#scan-config").slideUp("800");
 }
 
 // scan datasources
@@ -91,12 +109,10 @@ function scanDS() {
 		dataType : "json",
 		success: function(d){
 			if(d) {
-				$("#out").html("<h1 id='ds-home'>Datasources</h1>");
+				resultHeader();
 				renderGridOverview(d);
 				renderResultsDetailed(d);
-				$("#toggle-scan").attr("src", CMD_SHOW_ICON);
-				$("#toggle-scan").attr("title", "show scan options");
-				$("#scan-config").slideUp("800");
+				hideScanOptions();
 			}
 		},	
 		error:  function(msg){
@@ -105,7 +121,6 @@ function scanDS() {
 		} 
 	});
 }
-
 
 // renders a grid-like overview of the host results
 function renderGridOverview(data) {
@@ -228,4 +243,37 @@ function renderResultsDetailed(data){
 	buffer += "</div>";
 	$("#out").append(buffer);
 	$("#results").slideDown("200");
+}
+
+// renders the scan result as PDF
+function renderReport(){
+	var doc = new jsPDF();
+	var today = new Date();
+	var day = today.getDate();
+	var month = today.getMonth() + 1;
+	var year = today.getFullYear();
+	var reportFileName = "mandox-report-" + year + "-";
+	
+	if(month < 10) month = "0" + month;
+	if(day < 10) day = "0" + day;
+	reportFileName += month + "-" + day + ".pdf";
+	
+	// the actual rendering:
+	doc.setFontSize(30);
+	doc.text(15, 20, "Mandox Report");
+	doc.setFontSize(10);
+	doc.text(15, 30, "Date: " + year + "-" + month + "-" + day);
+	doc.setFontSize(20);
+	
+	doc.setLineWidth(0.05);
+	doc.line(15, 40, 150, 40);
+	$("#hosts h2").each(function(index) {
+		var host = $(this).next();
+		doc.text(20, 50 + index*20, $(this).text());
+		doc.setFontSize(10);
+		doc.text(20, 60 + index*20, $(host).text());
+		doc.setFontSize(20);
+	});
+
+	doc.save(reportFileName);
 }
