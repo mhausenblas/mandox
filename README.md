@@ -10,11 +10,10 @@ cluster. Datasources can be anything that expose a network interface
 
 ### Current
 
-* add MapR specific stuff (MCS, NFS, CLDB, etc)
 * Detailed View | Compact View | Reporting View panes in result
 * Report View: generate nice PDF for print
 * write launch bash script (nohup, background, etc)
-* write  documentation: config files, deployment guide, UI screen shots, screen cast
+* write  documentation: config files, deployment guide, screen shots, screen cast
 
 ## Done
 
@@ -29,6 +28,7 @@ cluster. Datasources can be anything that expose a network interface
 * add extended test (5 hosts)
 * move PORT2SERVICE mapping to server-side and GET with init (.mandox_mapping)
 * when more than one host in result, show grid-overview (number of services detected)
+* add MapR specific stuff (MCS, NFS, CLDB, etc)
 
 ## Background
 
@@ -48,6 +48,8 @@ cluster. Datasources can be anything that expose a network interface
 | MongoDB/mongod           | 28017  |
 | CouchDB/Futon            |  5984  |
 | Riak HTTP                |  8091  |
+
+See also [MapR ports](http://www.mapr.com/doc/display/MapR2/Ports+Used+by+MapR).
 
 ## Dependencies
 

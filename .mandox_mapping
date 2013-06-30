@@ -1,6 +1,7 @@
 port,title,icon,schema,docURL
 50070,HDFS Namenode,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
 50075,HDFS Datanode,img/hdfs.png,HTTP,http://hadoop.apache.org/docs/stable/hdfs_user_guide.html
+60000,HBase Master,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
 60010,HBase Master,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
 60030,HBase Regionservers,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
 8080,HBase REST Service,img/hbase.png,HTTP,http://hbase.apache.org/book.html#ops_mgt
@@ -11,3 +12,12 @@ port,title,icon,schema,docURL
 28017,MongoDB,img/mongodb.png,HTTP,http://docs.mongodb.org/manual/
 5984,CouchDB,img/couchdb.png,HTTP,http://docs.couchdb.org/en/latest/
 8091,Riak,img/riak.png,HTTP,http://docs.basho.com/riak/latest/
+8443,MapR Control System,img/mapr.png,HTTP,http://www.mapr.com/doc/display/MapR2/MapR+Control+System
+7220,MapR CLDB JMX,img/mapr.png,HTTP,http://www.mapr.com/doc/display/MapR2/CLDB+View
+7221,MapR CLDB Webserver,img/mapr.png,HTTP,http://www.mapr.com/doc/display/MapR2/CLDB+View
+7222,MapR CLDB,img/mapr.png,other,http://www.mapr.com/doc/display/MapR2/CLDB+View
+2049,NFS,img/nfs.png,other,http://www.mapr.com/doc/display/MapR2/Accessing+Data+with+NFS
+9997,NFS monitor (for HA),img/nfs.png,other,http://www.mapr.com/doc/display/MapR2/NFS+HA+Views
+9998,NFS management,img/nfs.png,other,http://www.mapr.com/doc/display/MapR2/NFS+HA+Views
+389,LDAP,img/ldap.png,other,http://tools.ietf.org/html/rfc4510
+636,LDAPS,img/ldap.png,other,http://tools.ietf.org/html/rfc4510

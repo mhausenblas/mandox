@@ -111,22 +111,22 @@ class MandoxServer(BaseHTTPRequestHandler):
 			logging.debug(' simple test - list of all datasource types')
 			results = {}
 			# list all known per type and last one is an unknown one
-			open_ports = ['50070', '60010', '10000', '3306', '5432', '28017', '5984', '8091', '12345']
+			open_ports = ['50070', '60010', '8443', '2049', '389', '10000', '3306', '5432', '28017', '5984', '8091', '12345']
 			results['127.0.0.1'] = open_ports
 			self.send_JSON(results)
 		elif apicall == '/ds/test/multiple':
 			logging.debug(' multiple hosts test')
 			results = {}
 			# randomly distributed list over five hosts
-			open_ports = ['50070', '60010']
+			open_ports = ['8443', '60010',]
 			results['node1.example.com'] = open_ports
-			open_ports = ['3306', '28017', '5984', '8091', '12345']
+			open_ports = ['3306', '5984', '8091', '28017', '12345']
 			results['node2.example.com'] = open_ports
-			open_ports = ['50070', '10000', '3306']
+			open_ports = ['50070', '10000']
 			results['node3.example.com'] = open_ports
-			open_ports = ['50075', '60030']
+			open_ports = ['2049', '50075', '60030']
 			results['node4.example.com'] = open_ports
-			open_ports = ['5984', '8091', '5432']
+			open_ports = ['389', '50075']
 			results['node5.example.com'] = open_ports
 			self.send_JSON(results)
 		elif apicall == '/ds/test/massive':
