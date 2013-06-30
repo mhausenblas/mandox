@@ -130,7 +130,7 @@ table td {
 
 #hosts {
 	padding: .5em 0 0 0;
-	clear: float;
+	clear: both;
 }
 
 

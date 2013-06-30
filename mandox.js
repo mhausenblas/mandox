@@ -109,24 +109,30 @@ function scanDS() {
 // renders a grid-like overview of the host results
 function renderGridOverview(data) {
 	var buffer = "";
-	var hosts = numHosts(data);
+	var hostList = [];
 	
-	console.log("Have results for " + hosts + " hosts");
+	// make sure that the host list is in alphanumerical order
+	for(host in data) {
+		hostList.push(host);
+	}
+	hostList.sort();
 	
-	if(hosts > 1) { // more than one host, show grid-overview
+	console.log("Have results for " + hostList.length + " hosts");
+	
+	if(hostList.length > 1) { // more than one host, show grid-overview
 		buffer += "<div id='grid-overview'>";
 		
-		if(hosts < 20) { // less than 20 hosts, we can still be generous
-			for(r in data) { // iterate over host results
+		if(hostList.length < 20) { // less than 20 hosts, we can still be generous
+			for(h in hostList) { // iterate over host results
 				buffer += "<div class='host-preview'>";
-				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ r +"' alt='" + r + "' /> ";
-				buffer += " " + data[r].length + " ";
+				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ hostList[h] +"' alt='" + hostList[h] + "' /> ";
+				buffer += " " + data[hostList[h]].length + " ";
 				buffer += "</div>";
 			}
 		}
 		else { // more than 20 hosts, show compact overview
-			for(r in data) { // iterate over host results
-				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' width='12px' title='"+ r + " (" + data[r].length + ")' alt='" + r + "' /> ";
+			for(h in hostList) { // iterate over host results
+				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' width='12px' title='"+ hostList[h] + " (" + data[hostList[h]].length + ")' alt='" + hostList[h] + "' /> ";
 			}
 		}
 		buffer += " </div>";
@@ -138,17 +144,25 @@ function renderGridOverview(data) {
 function renderResultsDetailed(data){
 	var buffer = "";
 	var portList = [];
+	var hostList = [];
 	var serviceTitle = "unknown";
 	var serviceSchema = "other";
 	var serviceIcon = "?";
 	var serviceURL = "";
 	
 	buffer += "<div id='hosts'>";
-	for(r in data) { // iterate over host results
-		console.log("On host " + r + " I found the following open ports:" + data[r]);
-		buffer += "<h2>Host: " + r + "</h2>";
+	
+	// make sure that the host list is in alphanumerical order
+	for(host in data) {
+		hostList.push(host);
+	}
+	hostList.sort();
+	
+	for(h in hostList) { // iterate over host results
+		console.log("On host " + hostList[h] + " I found the following open ports:" + data[hostList[h]]);
+		buffer += "<h2>Host: " + hostList[h] + "</h2>";
 		buffer += "<div class='host'>";
-		portList = data[r];
+		portList = data[hostList[h]];
 		if(portList.length > 0){
 			for(p in portList) { // iterate over port results
 				if(portList[p] in PORT2SERVICE){ // check if a known service
@@ -162,16 +176,16 @@ function renderResultsDetailed(data){
 					buffer += " </div>";
 					buffer += " <div class='service-desc'>";
 					if(serviceSchema == "HTTP") {
-						serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
+						serviceURL =  "http://" + hostList[h] + ":" + portList[p] + "/"; 
 						buffer += " <a href='" + serviceURL  + "' target='_blank'>"+ serviceTitle + "</a>";
 					}
 					else {
-						serviceURL =  r + ":" + portList[p]; 
+						serviceURL =  hostList[h] + ":" + portList[p]; 
 						buffer += serviceTitle + " at " + serviceURL;
 					}
 					buffer += "  <div class='service-cmds'>";
 					if(serviceSchema == "HTTP") {
-						serviceURL =  "http://" + r + ":" + portList[p] + "/"; 
+						serviceURL =  "http://" + hostList[h] + ":" + portList[p] + "/"; 
 						buffer += "<a href='" + serviceURL  + "' target='_blank' title='Inspect "+ serviceTitle + "'>";
 						buffer += "<img src='" + BASE_MANDOX + CMD_INSPECT_ICON + "' alt='inspect' />";
 						buffer += "</a>";
@@ -189,7 +203,7 @@ function renderResultsDetailed(data){
 					buffer += "  <img src='" + BASE_MANDOX + UNKNOWN_SERVICE_ICON + "' alt='unknown service icon' /> ";
 					buffer += " </div>";
 					buffer += " <div class='service-desc'>";
-					serviceURL = r + ":" + portList[p]; 
+					serviceURL = hostList[h] + ":" + portList[p]; 
 					buffer += "Detected unknown service at " + serviceURL;
 					buffer += " </div>";
 					buffer += "</div>";
@@ -205,16 +219,3 @@ function renderResultsDetailed(data){
 	$("#out").append(buffer);
 	$("#results").slideDown("200");
 }
-
-// as JS doesn't have a concept for 'number of entries in a dictionary'
-// here is the workaround for it:
-function numHosts(result){
-	var key, count = 0;
-	for(key in result) {
-		if(result.hasOwnProperty(key)) {
-			count++;
-		}
-	}
-	return count;
-}
-
