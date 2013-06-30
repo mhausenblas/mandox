@@ -23,12 +23,13 @@ $(document).ready(function() {
 	
 	init(); // make sure the get the port-service mapping first
 	
-	// handle direct API calls, that is all URLs that contain a frag ID
-	if(currentURL.indexOf("#") != -1){ 
+	// handle direct API calls, that is all URLs that contain 
+	// a frag ID starting with the string 'ds/'
+	if(currentURL.indexOf("#ds/") != -1){ 
 		fragID = currentURL.substring(currentURL.indexOf("#") + 1);
 		console.log("Direct API call  " + fragID);
 		$.getJSON(BASE_MANDOX + fragID, function(d) {
-			$("#out").html("");
+			$("#out").html("<h1 id='ds-home'>Datasources</h1>");
 			renderGridOverview(d);
 			renderResultsDetailed(d);
 		});
@@ -90,7 +91,7 @@ function scanDS() {
 		dataType : "json",
 		success: function(d){
 			if(d) {
-				$("#out").html("");
+				$("#out").html("<h1 id='ds-home'>Datasources</h1>");
 				renderGridOverview(d);
 				renderResultsDetailed(d);
 				$("#toggle-scan").attr("src", CMD_SHOW_ICON);
@@ -110,29 +111,35 @@ function scanDS() {
 function renderGridOverview(data) {
 	var buffer = "";
 	var hostList = [];
+	var overallSerivceNum = 0;
 	
 	// make sure that the host list is in alphanumerical order
 	for(host in data) {
 		hostList.push(host);
+		overallSerivceNum += data[host].length;
 	}
 	hostList.sort();
 	
 	console.log("Have results for " + hostList.length + " hosts");
 	
 	if(hostList.length > 1) { // more than one host, show grid-overview
+		buffer += "<p>Scanned " + hostList.length + " hosts in total and found " + overallSerivceNum + " datasources, overall:</p>";
 		buffer += "<div id='grid-overview'>";
-		
 		if(hostList.length < 20) { // less than 20 hosts, we can still be generous
 			for(h in hostList) { // iterate over host results
 				buffer += "<div class='host-preview'>";
-				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ hostList[h] +"' alt='" + hostList[h] + "' /> ";
+				buffer += "<a href='#" + hostList[h] + "' title='view details'>";
+				buffer += "<img src='" + BASE_MANDOX + NODE_ICON + "' title='"+ hostList[h] +"' alt='" + hostList[h] + "' />";
+				buffer += "</a>";
 				buffer += " " + data[hostList[h]].length + " ";
 				buffer += "</div>";
 			}
 		}
 		else { // more than 20 hosts, show compact overview
 			for(h in hostList) { // iterate over host results
-				buffer += " <img src='" + BASE_MANDOX + NODE_ICON + "' width='12px' title='"+ hostList[h] + " (" + data[hostList[h]].length + ")' alt='" + hostList[h] + "' /> ";
+				buffer += "<a href='#" + hostList[h] + "' title='view details'>";
+				buffer += "<img src='" + BASE_MANDOX + NODE_ICON + "' width='12px' title='"+ hostList[h] + " (" + data[hostList[h]].length + ")' alt='" + hostList[h] + "' />";
+				buffer += "</a>";
 			}
 		}
 		buffer += " </div>";
@@ -160,7 +167,10 @@ function renderResultsDetailed(data){
 	
 	for(h in hostList) { // iterate over host results
 		console.log("On host " + hostList[h] + " I found the following open ports:" + data[hostList[h]]);
-		buffer += "<h2>Host: " + hostList[h] + "</h2>";
+		buffer += "<h2 id='" + hostList[h] + "'>";
+		buffer += "<img src='" + BASE_MANDOX + NODE_ICON + "' alt='host icon' /> ";
+		buffer += hostList[h];
+		buffer += "</h2>";
 		buffer += "<div class='host'>";
 		portList = data[hostList[h]];
 		if(portList.length > 0){

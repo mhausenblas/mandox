@@ -132,8 +132,8 @@ class MandoxServer(BaseHTTPRequestHandler):
 		elif apicall == '/ds/test/massive':
 			logging.debug(' massive number of hosts test')
 			results = {}
-			# randomly distributed list over five hosts
-			for i in range(1,200): 
+			# distribute 1 NN and 199 DN over the cluster
+			for i in range(1,201): 
 				host_name = 'node' + str(i) + '.example.com'
 				if i == 1:
 					results[host_name] = [50070] # NN

@@ -8,7 +8,6 @@ cluster. Datasources can be anything that expose a network interface
 
 ### Current
 
-* when more than one host in result, show grid-overview (number of services detected)
 * add MapR specific stuff (MCS, NFS, CLDB, etc)
 * Detailed View | Compact View | Reporting View panes in result
 * Report View: generate nice PDF for print
@@ -27,6 +26,7 @@ cluster. Datasources can be anything that expose a network interface
 * add up/down cmds to scan panel and hide scan panel when hitting scan
 * add extended test (5 hosts)
 * move PORT2SERVICE mapping to server-side and GET with init (.mandox_mapping)
+* when more than one host in result, show grid-overview (number of services detected)
 
 ## Background
 
