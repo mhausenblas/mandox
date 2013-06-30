@@ -4,6 +4,8 @@ The polyglot persistence UI. Allows you to manage and use datasources in a
 cluster. Datasources can be anything that expose a network interface 
 (HTTP, Thrift, etc.) such as HDFS, HBase, Hive, MongoDB, CouchDB, etc.
 
+![mandox screen-shot](https://dl.dropboxusercontent.com/u/10436738/tmp/mandox-screen-shot-0.png "mandox screen-shot")
+
 ## To do
 
 ### Current
