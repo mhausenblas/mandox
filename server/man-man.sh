@@ -3,9 +3,9 @@
 ################################################################################
 # 
 # manman is the MANdox MANager, a script that allows you to start or stop
-# the mandox server
+# the mandox server as well as query the status of it.
 #
-# Usage: ./manan.sh start | stop
+# Usage: ./manan.sh start | stop | status
 #
 #
 
@@ -13,7 +13,7 @@ MAN_LOG=mandox.log
 MANDOX_PID=mandox.pid
 
 function usage() {
-	printf "Usage: %s start | stop\n" $0
+	printf "Usage: %s start | stop | status\n" $0
 }
 
 function start_mandox() {
