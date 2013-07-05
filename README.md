@@ -12,12 +12,14 @@ Hive running.
 In order to run mandox, you need to have Python 2.7 installed. I've tested it 
 under MacOS but it should also run under Linux without modifications.
 
-First, you need to get the content of the repo like in:
+All you need to do is to get the content of the repo, like in:
 
 	$ git clone https://github.com/mhausenblas/mandox.git
 	$ cd mandox
-	
-Then you can launch mandox in the `server` directory:
+
+## Usage
+
+You can launch mandox in the `server` directory:
 
 	$ pwd
 	/Users/mhausenblas2/Documents/repos/mandox/server
