@@ -24,9 +24,11 @@ import re
 import csv
 
 from BaseHTTPServer import BaseHTTPRequestHandler
-from os import curdir, sep
+from os import curdir, pardir, sep
 
-DEBUG = False
+DEBUG = True
+
+CLIENT_DIR = 'client'
 
 # The default ports to be scanned for active services.
 #
@@ -172,7 +174,7 @@ class MandoxServer(BaseHTTPRequestHandler):
 	# serves static content from file system
 	def serve_static_content(self, p, media_type='text/html'):
 		try:
-			f = open(curdir + sep + p)
+			f = open(pardir + sep + CLIENT_DIR + sep + p) # client static content
 			self.send_response(200)
 			self.send_header('Content-type', media_type)
 			self.end_headers()
