@@ -10,7 +10,6 @@ cluster. Datasources can be anything that expose a network interface
 
 ### Current
 
-* write launch bash script (nohup, background, etc)
 * write  documentation: config files, deployment guide, screen shots, screen cast
 
 ## Done
@@ -28,6 +27,8 @@ cluster. Datasources can be anything that expose a network interface
 * when more than one host in result, show grid-overview (number of services detected)
 * add MapR specific stuff (MCS, NFS, CLDB, etc)
 * Report View: generate nice PDF for print
+* write launch bash script (nohup, background, etc)
+
 
 ## Background
 

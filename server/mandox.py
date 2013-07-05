@@ -26,7 +26,7 @@ import csv
 from BaseHTTPServer import BaseHTTPRequestHandler
 from os import curdir, pardir, sep
 
-DEBUG = True
+DEBUG = False
 
 CLIENT_DIR = 'client'
 
